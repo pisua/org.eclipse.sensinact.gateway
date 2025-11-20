@@ -5,5 +5,5 @@ repos:
         name: Super-Linter (changed files)
         entry: bash .githooks/pre-push.sh
         language: system
-        stages: [push]
+        always_run: true
 
