@@ -27,7 +27,7 @@ public class ExtraDelegateProvider implements ContextResolver<IExtraDelegate> {
 
     @Context
     Providers providers;
-    
+
     private ExtraDelegateImpl extraDelegateImpl;
 
     @Override

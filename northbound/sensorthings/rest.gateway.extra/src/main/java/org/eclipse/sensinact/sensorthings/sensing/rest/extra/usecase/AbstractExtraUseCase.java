@@ -79,7 +79,7 @@ public abstract class AbstractExtraUseCase<M extends Id, S> implements IExtraUse
 
     /**
      * Quickly resolve a context object where the context type is unimportant
-     * 
+     *
      * @param <T>
      * @param providers
      * @param type
@@ -91,7 +91,7 @@ public abstract class AbstractExtraUseCase<M extends Id, S> implements IExtraUse
 
     /**
      * Resolve a context object of the given type for the supplied context
-     * 
+     *
      * @param <T>
      * @param providers
      * @param type

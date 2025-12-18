@@ -81,5 +81,4 @@ public class UseCaseProvider implements ContextResolver<IExtraUseCase> {
         });
     }
 
-    
 }
