@@ -64,16 +64,16 @@ public class SensorsAccessImpl extends AbstractAccess implements SensorsAccess, 
 
     @Override
     public Datastream getSensorDatastream(String id, String id2) {
-        if (!id.equals(id2)) {
+        String datastreamId = extractFirstIdSegment(id);
+        ProviderSnapshot provider = validateAndGetProvider(datastreamId);
+
+        ServiceSnapshot service = UtilIds.getDatastreamService(provider);
+        if (service == null)
             throw new NotFoundException();
-        }
-        ProviderSnapshot provider = validateAndGetProvider(extractFirstIdSegment(id));
 
         Datastream datastream = DtoMapper.toDatastream(getSession(), application, getMapper(), uriInfo, getExpansions(),
-                parseFilter(EFilterContext.DATASTREAMS), UtilIds.getDatastreamService(provider));
-        if (!id2.equals(datastream.id())) {
-            throw new NotFoundException();
-        }
+                parseFilter(EFilterContext.DATASTREAMS), service);
+
         return datastream;
     }
 
@@ -90,7 +90,9 @@ public class SensorsAccessImpl extends AbstractAccess implements SensorsAccess, 
 
     @Override
     public ObservedProperty getSensorDatastreamObservedProperty(String id, String id2) {
-        if (!id.equals(id2)) {
+        String idDatastream1 = extractFirstIdSegment(id2);
+        String idDatastream2 = extractFirstIdSegment(id2);
+        if (!idDatastream1.equals(idDatastream2)) {
             throw new NotFoundException();
         }
         ServiceSnapshot serviceDatastream = UtilIds.getDatastreamService(validateAndGetProvider(id2));
@@ -106,7 +108,9 @@ public class SensorsAccessImpl extends AbstractAccess implements SensorsAccess, 
 
     @Override
     public Sensor getSensorDatastreamSensor(String id, String id2) {
-        if (!id.equals(id2)) {
+        String idDatastream1 = extractFirstIdSegment(id2);
+        String idDatastream2 = extractFirstIdSegment(id2);
+        if (!idDatastream1.equals(idDatastream2)) {
             throw new NotFoundException();
         }
         return getSensor(id);

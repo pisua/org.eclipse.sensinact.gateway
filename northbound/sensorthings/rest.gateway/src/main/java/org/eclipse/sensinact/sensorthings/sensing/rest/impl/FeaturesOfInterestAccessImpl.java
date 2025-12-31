@@ -103,7 +103,7 @@ public class FeaturesOfInterestAccessImpl extends AbstractAccess
 
         ProviderSnapshot providerSnapshot = validateAndGetProvider(providerDatastream);
         ServiceSnapshot service = UtilIds.getDatastreamService(providerSnapshot);
-        if (service != null) {
+        if (service == null) {
             throw new NotFoundException();
         }
         Observation o = DtoMapper.toObservation(getSession(), application, getMapper(), uriInfo, getExpansions(),

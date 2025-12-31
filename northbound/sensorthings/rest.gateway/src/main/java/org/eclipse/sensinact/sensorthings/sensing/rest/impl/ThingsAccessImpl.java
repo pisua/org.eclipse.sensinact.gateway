@@ -164,12 +164,27 @@ public class ThingsAccessImpl extends AbstractAccess implements ThingsAccess, Th
         try {
             ICriterion filter = parseFilter(HISTORICAL_LOCATIONS);
             ProviderSnapshot providerSnapshot = validateAndGetProvider(providerId);
+            ServiceSnapshot serviceSnapshot = UtilIds.getThingService(providerSnapshot);
+
+            @SuppressWarnings("unchecked")
+            List<String> locationIds = (List<String>) UtilIds.getResourceField(serviceSnapshot, "locationIds",
+                    Object.class);
+            // TODO manage to get all location provider
+            ProviderSnapshot providerSnapshotLocation = null;
+            ServiceSnapshot serviceSnapshotLocation = null;
+            if (locationIds.size() > 0) {
+                providerSnapshotLocation = validateAndGetProvider(locationIds.get(0));
+                serviceSnapshotLocation = UtilIds.getLocationService(providerSnapshotLocation);
+            }
+            if (serviceSnapshotLocation == null) {
+                throw new NotFoundException();
+            }
             ResultList<HistoricalLocation> list = HistoryResourceHelper.loadHistoricalLocations(getSession(),
-                    application, getMapper(), uriInfo, getExpansions(), filter, providerSnapshot, 0);
+                    application, getMapper(), uriInfo, getExpansions(), filter, providerSnapshotLocation, 0);
             if (list.value().isEmpty()) {
                 list = new ResultList<>(null, null,
-                        DtoMapperGet.toHistoricalLocation(getSession(), application, getMapper(), uriInfo,
-                                getExpansions(), filter, providerSnapshot).map(List::of).orElse(List.of()));
+                        DtoMapper.toHistoricalLocation(getSession(), application, getMapper(), uriInfo, getExpansions(),
+                                filter, serviceSnapshotLocation).map(List::of).orElse(List.of()));
             }
             return list;
         } catch (IllegalArgumentException iae) {
@@ -181,15 +196,14 @@ public class ThingsAccessImpl extends AbstractAccess implements ThingsAccess, Th
     public HistoricalLocation getThingHistoricalLocation(String id, String id2) {
         String provider = extractFirstIdSegment(id2);
 
-        if (!id.equals(provider)) {
-            throw new NotFoundException();
-        }
-
         getTimestampFromId(id2);
 
         try {
-            Optional<HistoricalLocation> hl = DtoMapperGet.toHistoricalLocation(getSession(), application, getMapper(),
-                    uriInfo, getExpansions(), parseFilter(HISTORICAL_LOCATIONS), validateAndGetProvider(provider));
+            ProviderSnapshot providerSnapshot = validateAndGetProvider(provider);
+            ServiceSnapshot serviceSnapshot = UtilIds.getLocationService(providerSnapshot);
+
+            Optional<HistoricalLocation> hl = DtoMapper.toHistoricalLocation(getSession(), application, getMapper(),
+                    uriInfo, getExpansions(), parseFilter(HISTORICAL_LOCATIONS), serviceSnapshot);
             if (hl.isEmpty()) {
                 throw new NotFoundException();
             }
@@ -202,8 +216,11 @@ public class ThingsAccessImpl extends AbstractAccess implements ThingsAccess, Th
     @Override
     public Thing getThingHistoricalLocationsThing(String id, String id2) {
         String provider = extractFirstIdSegment(id2);
-
-        if (!id.equals(provider)) {
+        ProviderSnapshot providerThing = validateAndGetProvider(id);
+        ServiceSnapshot service = UtilIds.getThingService(providerThing);
+        @SuppressWarnings("unchecked")
+        List<String> locationIds = (List<String>) UtilIds.getResourceField(service, "locationIds", Object.class);
+        if (!locationIds.contains(provider)) {
             throw new NotFoundException();
         }
         return getThing(id);

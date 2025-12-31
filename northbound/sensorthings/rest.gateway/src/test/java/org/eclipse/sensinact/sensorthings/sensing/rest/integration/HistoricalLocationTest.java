@@ -12,7 +12,6 @@
 **********************************************************************/
 package org.eclipse.sensinact.sensorthings.sensing.rest.integration;
 
-import static java.time.Duration.ofDays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -239,7 +238,7 @@ public class HistoricalLocationTest extends AbstractIntegrationTest {
     @Test
     void getThingHistoricalLocationsTest() throws Exception {
         for (int i = 0; i < 10; i++) {
-            createResource("fizz", "admin", "location", new Point(i, i), TS_2012.plus(ofDays(i)));
+            createLocation("fizz", new Point(i, i));
         }
         // 10 updates
         waitForRowCount("sensinact.geo_data", 10);
@@ -253,7 +252,8 @@ public class HistoricalLocationTest extends AbstractIntegrationTest {
     @Test
     void getThingLocationHistoricalLocationsTest() throws Exception {
         for (int i = 0; i < 10; i++) {
-            createResource("fizz", "admin", "location", new Point(i, i), TS_2012.plus(ofDays(i)));
+            createLocation("fizz", new Point(i, i));
+
         }
         // 10 updates
         waitForRowCount("sensinact.geo_data", 10);
