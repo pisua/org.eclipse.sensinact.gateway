@@ -163,8 +163,8 @@ public class TimescaleDatabaseWorker implements TypedEventHandler<ResourceDataNo
             return;
         }
 
-        String command;
-        Object value;
+        final String command;
+        final Object value;
 
         if (isGeographic(event)) {
             if (logger.isDebugEnabled()) {
@@ -202,6 +202,10 @@ public class TimescaleDatabaseWorker implements TypedEventHandler<ResourceDataNo
             value = event.newValue() == null ? null : event.newValue().toString();
         }
         Connection conn = connectionSupplier.get();
+        if(conn == null) {
+            logger.warn("JDBC connection unavailable. This update will be skipped");
+            return;
+        }
 
         try {
             txControl.required(() -> {

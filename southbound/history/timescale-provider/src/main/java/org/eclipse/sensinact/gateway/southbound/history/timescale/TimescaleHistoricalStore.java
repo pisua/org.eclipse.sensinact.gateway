@@ -22,10 +22,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.eclipse.sensinact.core.command.AbstractSensinactCommand;
 import org.eclipse.sensinact.core.command.AbstractTwinCommand;
 import org.eclipse.sensinact.core.command.GatewayThread;
+import org.eclipse.sensinact.core.model.SensinactModelManager;
 import org.eclipse.sensinact.core.snapshot.ICriterion;
 import org.eclipse.sensinact.core.twin.SensinactDigitalTwin;
+import org.eclipse.sensinact.core.twin.SensinactProvider;
 import org.eclipse.sensinact.filters.resource.selector.api.ResourceSelector;
 import org.eclipse.sensinact.filters.resource.selector.api.ResourceSelectorFilterFactory;
 import org.osgi.framework.BundleContext;
@@ -217,8 +220,20 @@ public class TimescaleHistoricalStore {
         if (logger.isDebugEnabled()) {
             logger.debug("Stopping the TimescaleDB history store");
         }
-        setProvider(null);
         safeUnregister();
+        gatewayThread.execute(new AbstractSensinactCommand<Void>() {
+
+            @Override
+            protected Promise<Void> call(SensinactDigitalTwin twin, SensinactModelManager modelMgr,
+                    PromiseFactory promiseFactory) {
+                SensinactProvider sp = twin.getProvider(config.provider());
+                if(sp != null) {
+                    sp.delete();
+                }
+                return promiseFactory.resolved(null);
+            }
+        });
+        setProvider(null);
     }
 
     private void safeUnregister() {
