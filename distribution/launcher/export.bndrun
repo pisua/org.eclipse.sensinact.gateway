@@ -28,7 +28,7 @@
 	org.apache.felix.cm.json;version='[2.0.4,2.0.5)',\
 	org.apache.felix.configadmin;version='[1.9.24,1.9.25)',\
 	org.apache.felix.feature;version='[1.0.2,1.0.3)',\
-	org.apache.felix.scr;version='[2.2.2,2.2.3)',\
+	org.apache.felix.scr;version='[2.2.18,2.2.19)',\
 	org.apache.johnzon.core;version='[2.0.0,2.0.1)',\
 	org.eclipse.sensinact.gateway.distribution.launcher;version='[0.0.2,0.0.3)',\
 	org.objectweb.asm;version='[9.9.1,9.9.2)',\
@@ -36,7 +36,7 @@
 	org.objectweb.asm.tree;version='[9.9.1,9.9.2)',\
 	org.objectweb.asm.tree.analysis;version='[9.9.1,9.9.2)',\
 	org.objectweb.asm.util;version='[9.9.1,9.9.2)',\
-	org.osgi.service.component;version='[1.5.0,1.5.1)',\
+	org.osgi.service.component;version='[1.5.1,1.5.2)',\
 	org.osgi.service.feature;version='[1.0.0,1.0.1)',\
 	org.osgi.util.converter;version='[1.0.9,1.0.10)',\
 	org.osgi.util.function;version='[1.2.0,1.2.1)',\

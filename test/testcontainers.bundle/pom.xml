@@ -23,7 +23,7 @@
   <!-- No integration tests -->
   <properties>
     <!-- These need to be kept in sync with the testcontainers -->
-    <docker.java.version>3.7.0</docker.java.version>
+    <docker.java.version>3.7.1</docker.java.version>
     <duct.tape.version>1.0.8</duct.tape.version>
     <dec.version>0.1.2</dec.version>
   </properties>
